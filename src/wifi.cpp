@@ -208,10 +208,10 @@ void improv_loop()
 {
     loop_id = LOOP_IMPROV;
 #ifdef GW_PING_CHECK
-    static unsigned long gw_ping_timeout = 10000;
-    static unsigned long gw_report_interval = 0;
+    static uint64_t gw_ping_timeout = 10000;
+    static uint64_t gw_report_interval = 0;
     // Once a minute ping the Gateway and log
-    unsigned long now = millis64();
+    uint64_t now = millis64();
     if (now > gw_ping_timeout) {
         gw_ping_timeout = now + 60000;
         if (Ping.ping(WiFi.gatewayIP(), 1)) {
