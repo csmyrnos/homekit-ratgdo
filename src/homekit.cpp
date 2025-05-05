@@ -10,6 +10,8 @@
 #include "homekit_decl.h"
 #include "web.h"
 
+extern "C" bool arduino_homekit_is_paired();
+
 // Bring in config and characteristics defined in homekit_decl.c
 extern "C" homekit_server_config_t config;
 extern "C" homekit_characteristic_t current_door_state;
