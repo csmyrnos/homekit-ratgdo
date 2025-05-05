@@ -1,6 +1,9 @@
 #ifndef _UTILITIES_H
 #define _UTILITIES_H
 #include <stdint.h>
+
+uint64_t millis64();  // Declaration only
+
 #include <ESP8266WiFi.h>
 #include "homekit_decl.h"
 #include "ratgdo.h"
@@ -112,22 +115,4 @@ void write_config_to_file();
 void delete_file(const char *filename);
 
 #endif
-
-// Global variables
-static uint32_t lastMillis = 0;
-static uint64_t extendedMillis = 0;
-
-uint64_t millis64() {
-    uint32_t currentMillis = millis();
-
-    if (currentMillis < lastMillis) {
-        // Overflow occurred (~49.7 day wraparound)
-        extendedMillis += (uint64_t)1 << 32;
-    }
-
-    lastMillis = currentMillis;
-
-    // Combine high and low parts
-    return (extendedMillis & 0xFFFFFFFF00000000ULL) | currentMillis;
-}
 
