@@ -2,6 +2,21 @@
 // All rights reserved. GPLv3 License
 
 #include "utilities.h"
+
+static uint32_t lastMillis = 0;
+static uint64_t extendedMillis = 0;
+
+uint64_t millis64() {
+    uint32_t currentMillis = millis();
+
+    if (currentMillis < lastMillis) {
+        extendedMillis += (uint64_t)1 << 32;
+    }
+
+    lastMillis = currentMillis;
+    return (extendedMillis & 0xFFFFFFFF00000000ULL) | currentMillis;
+}
+
 #include "log.h"
 #include "LittleFS.h"
 #include "comms.h"
