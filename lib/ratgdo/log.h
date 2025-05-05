@@ -8,6 +8,7 @@
 #include <LittleFS.h>
 #include "secplus2.h"
 #include <esp_xpgm.h>
+#include "utilities.h"
 
 void print_packet(uint8_t pkt[SECPLUS2_CODE_LEN]);
 
@@ -41,14 +42,14 @@ void crashCallback();
 
 #define RATGDO_PRINTF(message, ...) logToBuffer_P(PSTR(message), ##__VA_ARGS__)
 
-#define RINFO(message, ...) RATGDO_PRINTF(">>> [%7lu] RATGDO: " message "\r\n", millis(), ##__VA_ARGS__)
-#define RERROR(message, ...) RATGDO_PRINTF("!!! [%7lu] RATGDO: " message "\r\n", millis(), ##__VA_ARGS__)
+#define RINFO(message, ...) RATGDO_PRINTF(">>> [%7lu] RATGDO: " message "\r\n", millis64(), ##__VA_ARGS__)
+#define RERROR(message, ...) RATGDO_PRINTF("!!! [%7lu] RATGDO: " message "\r\n", millis64(), ##__VA_ARGS__)
 #else // LOG_MSG_BUFFER
 
 #ifndef UNIT_TEST
 
-#define RINFO(message, ...) XPGM_PRINTF(">>> [%7lu] RATGDO: " message "\r\n", millis(), ##__VA_ARGS__)
-#define RERROR(message, ...) XPGM_PRINTF("!!! [%7lu] RATGDO: " message "\r\n", millis(), ##__VA_ARGS__)
+#define RINFO(message, ...) XPGM_PRINTF(">>> [%7lu] RATGDO: " message "\r\n", millis64(), ##__VA_ARGS__)
+#define RERROR(message, ...) XPGM_PRINTF("!!! [%7lu] RATGDO: " message "\r\n", millis64(), ##__VA_ARGS__)
 
 #else // UNIT_TEST
 
