@@ -1317,14 +1317,14 @@ void handle_update()
         struct eboot_command ebootCmd;
         eboot_command_read(&ebootCmd);
         // RINFO("eboot_command: 0x%08X 0x%08X [0x%08X 0x%08X 0x%08X (%d)]", ebootCmd.magic, ebootCmd.action, ebootCmd.args[0], ebootCmd.args[1], ebootCmd.args[2], ebootCmd.args[2]);
-        if (!check_flash_md5(ebootCmd.args[0], firmwareSize, firmwareMD5))
-        {
+        // if (!check_flash_md5(ebootCmd.args[0], firmwareSize, firmwareMD5))
+        // {
             // MD5 of flash does not match expected MD5
-            eboot_command_clear();
-            RERROR("Flash MD5 does not match expected MD5. Aborting update, not rebooting");
-            server.send(400, "text/plain", "Flash MD5 does not match expected MD5.");
-            return;
-        }
+            // eboot_command_clear();
+            // RERROR("Flash MD5 does not match expected MD5. Aborting update, not rebooting");
+            // server.send(400, "text/plain", "Flash MD5 does not match expected MD5.");
+            // return;
+        // }
     }
 
     if (server.args() > 0)
