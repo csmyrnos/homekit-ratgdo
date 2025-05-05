@@ -9,6 +9,7 @@
 #include "utilities.h"
 #include "homekit_decl.h"
 #include "web.h"
+#include <LittleFS.h>
 
 extern "C" bool arduino_homekit_is_paired();
 
@@ -53,9 +54,9 @@ void setup_homekit()
 {
     RINFO("=== Starting HomeKit Server");
 
-if (arduino_homekit_is_paired()) {
-    RINFO("Device is already paired. Skipping HomeKit server init.");
-    return;
+if (LittleFS.exists("pair.dat")) {
+        RINFO("Device is already paired. Skipping HomeKit server init.");
+        return;
 }
 
     String macAddress = WiFi.macAddress();
