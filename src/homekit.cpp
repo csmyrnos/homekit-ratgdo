@@ -50,6 +50,12 @@ void homekit_loop()
 void setup_homekit()
 {
     RINFO("=== Starting HomeKit Server");
+
+if (arduino_homekit_is_paired()) {
+    RINFO("Device is already paired. Skipping HomeKit server init.");
+    return;
+}
+
     String macAddress = WiFi.macAddress();
     snprintf(serial_number, SERIAL_NAME_SIZE, "%s", macAddress.c_str());
 
