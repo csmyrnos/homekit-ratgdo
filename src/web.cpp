@@ -266,7 +266,7 @@ char *json = NULL;
 void web_loop()
 {
     loop_id = LOOP_WEB;
-    unsigned long upTime = millis();
+    uint64_t upTime = millis64();
     START_JSON(json);
     if (garage_door.active && garage_door.current_state != lastDoorState)
     {
@@ -315,7 +315,7 @@ void web_loop()
         REMOVE_NL(json);
         SSEBroadcastState(json);
     }
-    if ((userConfig->rebootSeconds != 0) && ((unsigned long)userConfig->rebootSeconds < millis() / 1000))
+    if ((userConfig->rebootSeconds != 0) && ((unsigned long)userConfig->rebootSeconds < millis64() / 1000))
     {
         // Reboot the system if we have reached time...
         RINFO("Rebooting system as %i seconds expired", userConfig->rebootSeconds);
@@ -590,7 +590,7 @@ void handle_everything()
 
 void handle_status()
 {
-    unsigned long upTime = millis();
+    uint64_t upTime = millis64();
 #define paired homekit_is_paired()
 #define accessoryID arduino_homekit_get_running_server() ? arduino_homekit_get_running_server()->accessory_id : "Inactive"
 #define clientCount arduino_homekit_get_running_server() ? arduino_homekit_get_running_server()->nfds : 0
@@ -1016,7 +1016,7 @@ void SSEheartbeat(SSESubscription *s)
         static int lastClientCount = 0;
 
         START_JSON(json);
-        ADD_INT(json, "upTime", millis());
+        ADD_INT(json, "upTime", millis64());
         ADD_INT(json, "freeHeap", free_heap);
         ADD_INT(json, "minHeap", min_heap);
         ADD_INT(json, "minStack", ESP.getFreeContStack());
