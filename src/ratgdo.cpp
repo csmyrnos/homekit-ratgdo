@@ -10,6 +10,7 @@
 #include "web.h"
 #include "utilities.h"
 #include "Packet.h"
+#include "esp_timer.h"
 
 #include <time.h>
 #include <coredecls.h>
@@ -65,7 +66,7 @@ bool previousDryContactDoorClose = false;
 struct obstruction_sensor_t
 {
     unsigned int low_count = 0;    // count obstruction low pulses
-    unsigned long last_asleep = 0; // count time between high pulses from the obst ISR
+    uint64_t last_asleep = 0; // count time between high pulses from the obst ISR
 } obstruction_sensor;
 
 // long unsigned int led_reset_time = 0; // Stores time when LED should return to idle state
@@ -85,10 +86,10 @@ extern "C" uint32_t __crc_val;
 // Track our memory usage
 uint32_t free_heap = 65535;
 uint32_t min_heap = 65535;
-unsigned long next_heap_check = 0;
+uint64_t next_heap_check = 0;
 
 bool status_done = false;
-unsigned long status_timeout;
+uint64_t status_timeout;
 
 /********************************** MAIN LOOP CODE *****************************************/
 
@@ -132,7 +133,7 @@ void setup()
     led.idle();
     RINFO("=== RATGDO setup complete ===");
     RINFO("=============================");
-    status_timeout = millis() + 2000;
+    status_timeout = (esp_timer_get_time() / 1000) + 2000;
 }
 
 void loop()
@@ -152,7 +153,7 @@ void loop()
     {
         homekit_loop();
     }
-    else if (millis() > status_timeout)
+    else if ((esp_timer_get_time() / 1000) > status_timeout)
     {
         RINFO("Status timeout, starting homekit");
         status_done = true;
@@ -267,8 +268,8 @@ void IRAM_ATTR isr_obstruction()
 
 void obstruction_timer()
 {
-    unsigned long current_millis = millis();
-    static unsigned long last_millis = 0;
+    uint64_t current_millis = (esp_timer_get_time() / 1000);
+    static uint64_t last_millis = 0;
 
     // the obstruction sensor has 3 states: clear (HIGH with LOW pulse every 7ms), obstructed (HIGH), asleep (LOW)
     // the transitions between awake and asleep are tricky because the voltage drops slowly when falling asleep
@@ -338,7 +339,7 @@ void service_timer_loop()
     // Service the Obstruction Timer
     obstruction_timer();
 
-    unsigned long current_millis = millis();
+    uint64_t current_millis = (esp_timer_get_time() / 1000);
 
 #ifdef NTP_CLIENT
     if (enableNTP && clockSet && lastRebootAt == 0)
@@ -414,14 +415,14 @@ void LED::setIdleState(uint8_t state)
     }
 }
 
-void LED::flash(unsigned long ms)
+void LED::flash(uint64_t ms)
 {
     if (ms)
     {
         digitalWrite(LED_BUILTIN, activeState);
-        resetTime = millis() + ms;
+        resetTime = (esp_timer_get_time() / 1000) + ms;
     }
-    else if ((digitalRead(LED_BUILTIN) == activeState) && (millis() > resetTime))
+    else if ((digitalRead(LED_BUILTIN) == activeState) && ((esp_timer_get_time() / 1000) > resetTime))
     {
         digitalWrite(LED_BUILTIN, idleState);
     }
