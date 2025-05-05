@@ -54,6 +54,16 @@ void setup_homekit()
 {
     RINFO("=== Starting HomeKit Server");
 
+uint8_t mac[6];
+WiFi.macAddress(mac);
+
+// Set serial_number as full MAC (no colons)
+snprintf(serial_number, sizeof(serial_number), "%02X%02X%02X%02X%02X%02X",
+         mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+
+// Set RFC952-compliant name using last 2 MAC bytes
+snprintf(device_name_rfc952, sizeof(device_name_rfc952), "ratgdo-%02X%02X", mac[4], mac[5]);
+    
 if (LittleFS.exists("pair.dat")) {
         RINFO("Device is already paired. Skipping HomeKit server init.");
         return;
