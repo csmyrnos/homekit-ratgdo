@@ -9,6 +9,7 @@
 #include "secplus2.h"
 #include "comms.h"
 #include "web.h"
+#include "esp_timer.h"
 
 #ifndef UNIT_TEST
 
@@ -207,7 +208,7 @@ void printMessageLog(Print &outputDev)
     }
 #endif
     outputDev.write("Server uptime (ms): ");
-    outputDev.println(millis());
+    outputDev.println((esp_timer_get_time() / 1000));
     outputDev.write("Firmware version: ");
     outputDev.write(AUTO_VERSION);
     outputDev.println();
