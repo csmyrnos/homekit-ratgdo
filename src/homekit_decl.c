@@ -109,6 +109,4 @@ homekit_server_config_t config = {
     .accessories = accessories,
     .password = "251-02-023",
     .setupId = "RTGO",
-    .accessory_id = "CD:72:F1:26:41:8D",   // Must be unique but static across reboots
-    .storage_path = "pair.dat",           // Enables persistent pairing
 };
