@@ -30,7 +30,7 @@
 
 
 // support for changeing WiFi settings
-unsigned long wifiConnectTimeout = 0;
+uint64_t wifiConnectTimeout = 0;
 // support for scaning WiFi networks
 bool wifiNetsCmp(wifiNet_t a, wifiNet_t b)
 {
@@ -210,10 +210,10 @@ void improv_loop()
 {
     loop_id = LOOP_IMPROV;
 #ifdef GW_PING_CHECK
-    static unsigned long gw_ping_timeout = 10000;
-    static unsigned long gw_report_interval = 0;
+    static uint64_t gw_ping_timeout = 10000;
+    static uint64_t gw_report_interval = 0;
     // Once a minute ping the Gateway and log
-    unsigned long now = (esp_timer_get_time() / 1000);
+    uint64_t now = (esp_timer_get_time() / 1000);
     if (now > gw_ping_timeout) {
         gw_ping_timeout = now + 60000;
         if (Ping.ping(WiFi.gatewayIP(), 1)) {
